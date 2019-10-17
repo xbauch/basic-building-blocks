@@ -25,7 +25,7 @@ int main() {
       std::shuffle(field.begin(), field.end(),
                    std::mt19937{std::random_device{}()});
       auto start = std::chrono::system_clock::now();
-      merge_sort(field);
+      merge_sort(field.begin(), field.end());
       sort_time += std::chrono::system_clock::now() - start;
     }
 

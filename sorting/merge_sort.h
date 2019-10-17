@@ -1,37 +1,40 @@
+#include <assert.h>
+#include <iterator>
 #include <vector>
 
-template <typename T>
-void merge(std::vector<T> &input, size_t left_start, size_t middle,
-           size_t right_end) {
-  size_t current_left = left_start;
-  size_t current_right = middle;
-  std::vector<T> output;
-  for (size_t i = left_start; i < right_end; i++) {
-    if (input[current_left] < input[current_right])
-      output.push_back(input[current_left++]);
-    else
-      output.push_back(input[current_right++]);
-  }
+template<typename ForwardIterator>
+void merge(ForwardIterator left_start, ForwardIterator left_end,
+           ForwardIterator right_start, ForwardIterator right_end,
+           ForwardIterator output) {
+  auto current_left = left_start;
+  auto current_right = right_start;
 
-  size_t j = 0;
-  for (size_t i = left_start; i < right_end; i++)
-    input[i] = output[j++];
+  while (current_left != left_end || current_right != right_end) {
+    if (current_left == left_end)
+      *output++ = *current_right++;
+    else if (current_right == right_end)
+      *output++ = *current_left++;
+    else if (*current_left < *current_right)
+      *output++ = *current_left++;
+    else
+      *output++ = *current_right++;
+  }
 }
 
-template <typename T>
-void merge_sort(std::vector<T> &input, size_t from, size_t to) {
-  size_t current_size = to - from;
+template<typename RandomAccessIterator>
+void merge_sort(RandomAccessIterator from, RandomAccessIterator to) {
+  auto current_size = to - from;
   if (current_size <= 1)
     return;
 
-  size_t half = from + current_size / 2;
+  auto half = from + current_size / 2;
 
-  merge_sort(input, from, half);
-  merge_sort(input, half, to);
-  merge(input, from, half, to);
+  merge_sort(from, half);
+  merge_sort(half, to);
+
+  std::vector<typename RandomAccessIterator::value_type> output;
+  output.resize(current_size);
+  merge(from, half, half, to, output.begin());
+  for (const auto &temp : output)
+    *from++ = temp;
 }
-
-template <typename T> void merge_sort(std::vector<T> &input) {
-  merge_sort(input, 0, input.size());
-}
-
