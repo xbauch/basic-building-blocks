@@ -21,8 +21,7 @@ void merge(ForwardIterator left_start, ForwardIterator left_end,
   }
 }
 
-template<typename RandomAccessIterator>
-void merge_sort(RandomAccessIterator from, RandomAccessIterator to) {
+void merge_sort(LegacyRandomAccessIterator from, LegacyRandomAccessIterator to) {
   auto current_size = to - from;
   if (current_size <= 1)
     return;
