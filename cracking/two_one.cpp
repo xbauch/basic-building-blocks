@@ -1,39 +1,5 @@
+#include "list_node.h"
 #include <set>
-
-template <typename T> struct ListNode {
-  T value;
-  ListNode *next;
-
-  ListNode *append(T new_value) {
-    next = new (ListNode);
-    next->value = new_value;
-    return next;
-  }
-
-  void remove_next() {
-    if (next == nullptr)
-      return;
-    auto next_copy = next;
-    next = next->next;
-    delete (next);
-  }
-
-  void delete_next() {
-    if (next == nullptr)
-      return;
-    next->delete_next();
-    delete (next);
-  }
-
-  ListNode(T value) : value(value), next(nullptr) {}
-
-  ~ListNode() {
-    auto temp_next = next;
-    while (temp_next != nullptr) {
-      delete (temp_next);
-    }
-  }
-};
 
 template <typename T> void remove_duplicates_const(ListNode<T> *first_node) {
   if (first_node == nullptr)
